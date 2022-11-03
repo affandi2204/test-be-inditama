@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Capacity extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $primeryKey = 'id';
-    protected $incrementing = true;
+    public $incrementing = true;
     protected $table = 'products';
 
     protected $fillable = [
