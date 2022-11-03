@@ -11,11 +11,12 @@ class ProductCategory extends Model
 {
     use HasFactory;
 
-    protected $incrementing = true;
+    public $incrementing = true;
     protected $table = 'product_categories';
     protected $primeryKey = 'id';
 
     protected $fillable = [
+        'id',
         'name',
     ];
 
@@ -38,5 +39,10 @@ class ProductCategory extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function product()
+    {
+        return $this->hasMany(Product::class, 'product_category_id');
     }
 }

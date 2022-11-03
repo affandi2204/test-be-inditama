@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuthResponse extends JsonResource
+class ProductCategoryResponse extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,10 @@ class AuthResponse extends JsonResource
     public function toArray($responsee)
     {
         return [
-            'id'     => $this['user']->id,
-            'name'   => $this['user']->name,
-            'email'  => $this['user']->email,
-            'login_at'  => date('Y-m-d H:i:s', strtotime($this['user']->login_at)),
-            'token'  => $this['token'],
+            'id'     => $this->id,
+            'name'   => $this->name,
+            'created_at'  => date('Y-m-d H:i:s', strtotime($this->created_at)),
+            'updated_at'  => date('Y-m-d H:i:s', strtotime($this->updated_at)),
         ];
     }
 }
