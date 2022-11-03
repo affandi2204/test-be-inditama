@@ -18,7 +18,7 @@ class AuthResponse extends JsonResource
             'id'     => $this['user']->id,
             'name'   => $this['user']->name,
             'email'  => $this['user']->email,
-            'login_at'  => $this['user']->login_at,
+            'login_at'  => date('Y-m-d H:i:s', strtotime($this['user']->login_at)),
             'token'  => $this['token'],
         ];
     }
