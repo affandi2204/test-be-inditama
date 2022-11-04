@@ -43,6 +43,12 @@ Generate jwt secret
 php artisan jwt:secret
 ```
 
+Storage link
+
+```sh
+php artisan storage:link
+```
+
 migration and Seed the tables
 
 ```sh
