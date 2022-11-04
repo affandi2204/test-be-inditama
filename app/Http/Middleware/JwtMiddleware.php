@@ -30,10 +30,10 @@ class JwtMiddleware extends BaseMiddleware
                 $token = substr($token, 7);
             }
             if (is_null($request->user())) {
-                return response()->json(['success' => false, 'message' => 'You`re can`t use this route.'], 403);
+                return response()->json(['success' => false, 'message' => 'You can`t use this route.'], 403);
             }
             if (!$request->user()->checkingToken($token)) {
-                return response()->json(['success' => false, 'message' => 'You`re can`t use this route.'], 403);
+                return response()->json(['success' => false, 'message' => 'You can`t use this route.'], 403);
             }
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => 'Authorization not found.'], 403);
