@@ -43,12 +43,17 @@ Generate jwt secret
 php artisan jwt:secret
 ```
 
-
 migration and Seed the tables
 
 ```sh
 php artisan migrate
 php artisan db:seed
+```
+
+to make sure can running helper class
+
+```sh
+composer dump-autoload
 ```
 
 Run the server
