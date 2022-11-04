@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ProductCategoryController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// user
+Route::group([
+    'controller' => UserController::class,
+    'middleware' => 'assign.guard:api'
+], function () {
+    Route::post('/login', 'login');
+    Route::post('/register', 'register');
+    Route::middleware('jwt.verify')->get('/logout', 'logout');
+    Route::middleware('jwt.verify')->get('/profile', 'profile');
+});
+
+// product category
+Route::group([
+    'controller' => ProductCategoryController::class,
+    'middleware' => 'assign.guard:api',
+    'prefix' => 'category-products'
+], function () {
+    Route::middleware('jwt.verify')->get('/', 'getAll');
+    Route::middleware('jwt.verify')->get('/{id}', 'getOne');
+    Route::middleware('jwt.verify')->post('/', 'store');
+    Route::middleware('jwt.verify')->post('/{id}', 'update');
+    Route::middleware('jwt.verify')->delete('/{id}', 'destroy');
+});
+
+// product
+Route::group([
+    'controller' => ProductController::class,
+    'middleware' => 'assign.guard:api',
+    'prefix' => 'products'
+], function () {
+    Route::middleware('jwt.verify')->get('/', 'getAll');
+    Route::middleware('jwt.verify')->get('/{id}', 'getOne');
+    Route::middleware('jwt.verify')->post('/', 'store');
+    Route::middleware('jwt.verify')->post('/{id}', 'update');
+    Route::middleware('jwt.verify')->delete('/{id}', 'destroy');
 });
