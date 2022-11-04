@@ -8,9 +8,7 @@ use App\Http\Resources\BaseResponse;
 use App\Http\Resources\ProductCategoryResponse;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class ProductCategoryService extends BaseResponse
 {
@@ -20,14 +18,15 @@ class ProductCategoryService extends BaseResponse
             $limit = $request->limit ?? 10;
             $sortBy = $request->sortBy ?? 'id';
             $orderBy = $request->orderBy ?? 'desc';
+            $search = $request->search;
 
-            $productCategory = ProductCategory::orderBy($sortBy, $orderBy)->paginate($limit);
+            $productCategory = ProductCategory::orderBy($sortBy, $orderBy);
 
-            if (!empty($request->search)) {
-                $search = $request->search;
+            if (!empty($search)) {
                 $productCategory->Where('name', 'LIKE', "%{$search}%");
             }
-            return ProductCategoryResponse::collection($productCategory)->response();
+
+            return ProductCategoryResponse::collection($productCategory->paginate($limit))->response();
         } catch (\Throwable $th) {
             DB::rollBack();
             return $this->sendError($th->getMessage(), 500);
@@ -67,6 +66,9 @@ class ProductCategoryService extends BaseResponse
             $productCategory = $this->findbyId($id);
             if (!$productCategory) {
                 return $this->sendError('Product category is not found.', 404);
+            } else if (count($productCategory->product)) {
+                // if related relation data is exist
+                return $this->sendError('Product category can`t be updated, cause have related relation to other table.', 406);
             }
             DB::beginTransaction();
             $productCategory->name = $input->name;
@@ -90,7 +92,7 @@ class ProductCategoryService extends BaseResponse
                 return $this->sendError('Product category is not found.', 404);
             } else if (count($productCategory->product)) {
                 // if related relation data is exist
-                return $this->sendError('Product category can`t be destroyed.', 400);
+                return $this->sendError('Product category can`t be destroyed, cause have related relation to other table.', 406);
             }
 
             $productCategory->delete();
